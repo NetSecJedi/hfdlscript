@@ -118,23 +118,9 @@ WEIGHT_GROUNDSTATION=1
 
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 
-# Check for running dumphfdl tasks and stop
-echo --------
-echo "Checking for active dumphfdl processes"
-if [ $(systemctl is-active dumphfdl) == "active" ]; then
-    # Check for a systemd version of dumphfdl and stop it properly
-    echo "Stopping active dumphfdl systemd service"
-    systemctl stop dumphfdl
-    sleep 5
-elif [ ! -z $(pgrep dumphfdl) ]; then
-    #this kills any additional running dumphfdl tasks not started by systemd
-    echo "Stopping non systemd dumphfdl tasks"
-    pkill dumphfdl || true
-    sleep 5
-fi
-echo --------
-
 #this kills any currently-running tail tasks. (If you tail or multitail the hfdl.log, not killing tail tasks will leave several zombie tail processes running which could impact your computer's performance.)
+echo "Stopping dumphfdl tasks"
+pkill dumphfdl || true
 pkill tail || true
 sleep 5
 
