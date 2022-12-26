@@ -14,15 +14,15 @@ trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 
 #you must specify the testing duration for each array of frequencies from the command line when you run the script, for example ./hfdl.sh 2m or ./hfdl.sh 90s. Choose the lowest duration that still gives you a good representative sample of current activity on the frequencies.
 
-#the script may be automatically run at intervals as a cron job if you wish. Example: run crontab -e and at the end of the file add 0 * * * * /home/pi/dumphfdl/hfdl.sh 2m  > /home/pi/hflog/cron.log 2>&1 (which will also log the output of the script plus any error messages)
+#the script may be automatically run at intervals as a cron job if you wish. Example: run crontab -e and at the end of the file add 0 * * * * /home/seth/radio/dumphfdl/hfdl.sh 2m  > home/seth/hflog/cron.log 2>&1 (which will also log the output of the script plus any error messages)
 
 #to close dumphfdl after running the script, run pkill dumphfdl in another terminal window
 
 ###############################################################	
 
 
-LOGFILE="/home/pi/hflog/hfdl.log"
-ERRORLOG="/home/pi/hflog/hfdl.error.log"
+LOGFILE="/home/seth/radio/hfdl.log"
+ERRORLOG="/home/seth/radio/hfdl.error.log"
 
 # rotates the hfdl log daily
 currentTime=`date +%H:%M`
@@ -31,11 +31,11 @@ if [ $currentTime == "00:00" ] && [ -f "$LOGFILE" ];
 then
 			pkill dumphfdl;
 			sleep 5
-			mv "$LOGFILE" "/home/pi/hflog/hfdl_${currentDate}.log"
+			mv "$LOGFILE" "/home/seth/hflog/hfdl_${currentDate}.log"
 fi
 sleep 5
 
-# use tail -f /home/pi/hflog/hfdl.log to follow the output when the decoder is running
+# use tail -f home/seth/hflog/hfdl.log to follow the output when the decoder is running
 
 #name for the frequency group
 fname=()
@@ -90,23 +90,23 @@ dumpcmd=( /usr/local/bin/dumphfdl )
 
 # edit the soapysdr driver as reuired
 dumpcmd+=( --soapysdr driver=sdrplay )
-dumpcmd+=( --freq-as-squawk )
+#dumpcmd+=( --freq-as-squawk )
 
 # edit the systable path in the next two lines:
-dumpcmd+=( --system-table /home/pi/dumphfdl/etc/systable.conf )
-dumpcmd+=( --system-table-save /home/pi/dumphfdl/etc/systable-new.conf )
+#dumpcmd+=( --system-table /home/seth/radio/dumphfdl/etc/systable.conf )
+#dumpcmd+=( --system-table-save /home/seth/radio/dumphfdl/etc/systable-new.conf )
 
 # output data into combine1090, add # in front of the line to deactivate
-dumpcmd+=( --output decoded:basestation:tcp:mode=server,address=127.0.0.1,port=29109 )
+#dumpcmd+=( --output decoded:basestation:tcp:mode=server,address=127.0.0.1,port=29109 )
 
 # output data into VRS, add # in front of the line to deactivate
-dumpcmd+=( --output decoded:basestation:tcp:mode=server,address=127.0.0.1,port=20005 )
+#dumpcmd+=( --output decoded:basestation:tcp:mode=server,address=127.0.0.1,port=20005 )
 
 # output data into experimental adsbexchange aggregation (not shown on main page for the moment)
-dumpcmd+=( --output decoded:basestation:tcp:mode=server,address=feed.adsbexchange.com,port=32600 )
+#dumpcmd+=( --output decoded:json:tcp:address=feed.airframes.io,port=5556 )
 
 # use your local basestation database to look up aircraft details or add a # in front of the line to not use a basestation database
-#dumpcmd+=( --bs-db /home/pi/dumphfdl/Basestation.sqb --ac-details verbose )
+#dumpcmd+=( --bs-db /home/seth/radio/dumphfdl/Basestation.sqb --ac-details verbose )
 
 # change the LOGFILE variable at the top to modify where the more permanent logfile is
 dumpcmd+=( --output "decoded:text:file:path=$LOGFILE")
