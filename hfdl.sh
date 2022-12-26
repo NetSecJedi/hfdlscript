@@ -126,7 +126,7 @@ if [ $(systemctl is-active dumphfdl) == "active" ]; then
     echo "Stopping active dumphfdl systemd service"
     systemctl stop dumphfdl
     sleep 5
-elseif [ ! -z $(pgrep dumphfdl) ]; then
+elif [ ! -z $(pgrep dumphfdl) ]; then
     #this kills any additional running dumphfdl tasks not started by systemd
     echo "Stopping non systemd dumphfdl tasks"
     pkill dumphfdl || true
