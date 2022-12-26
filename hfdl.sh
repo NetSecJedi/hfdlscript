@@ -116,24 +116,25 @@ WEIGHT_POSITIONS=40
 WEIGHT_AIRCRAFT=10
 WEIGHT_GROUNDSTATION=1
 
-
-
-
-
-
-
-
-
-
-# nothing beyond this point should need user changes
-
-
-
-
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 
-#this kills any currently-running dumphfdl and tail tasks. (If you tail or multitail the hfdl.log, not killing tail tasks will leave several zombie tail processes running which could impact your computer's performance.)
-pkill dumphfdl || true
+# Check for running dumphfdl tasks and stop
+echo --------
+echo "Checking for active dumphfdl processes"
+if [ $(systemctl is-active dumphfdl) == "active" ]; then
+    # Check for a systemd version of dumphfdl and stop it properly
+    echo "Stopping active dumphfdl systemd service"
+    systemctl stop dumphfdl
+    sleep 5
+elseif [ ! -z $(pgrep dumphfdl) ]; then
+    #this kills any additional running dumphfdl tasks not started by systemd
+    echo "Stopping non systemd dumphfdl tasks"
+    pkill dumphfdl || true
+    sleep 5
+fi
+echo --------
+
+#this kills any currently-running tail tasks. (If you tail or multitail the hfdl.log, not killing tail tasks will leave several zombie tail processes running which could impact your computer's performance.)
 pkill tail || true
 sleep 5
 
