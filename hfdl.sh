@@ -208,13 +208,13 @@ echo "Using ${fname[$k]}: gain-elements ${gain[$k]}, sample-rate ${samp[$k]}, fr
 
 #NOTE: if something is wrong with your script or if no messages were received it will always default to using the first frequency array
 
+# I dont need this section for my needs but leaving in the script in case I want to use it later
+#longcmd=( "${dumpcmd[@]}" --gain-elements ${gain[$k]} --sample-rate ${samp[$k]} ${freq[$k]} )
 
-longcmd=( "${dumpcmd[@]}" --gain-elements ${gain[$k]} --sample-rate ${samp[$k]} ${freq[$k]} )
-
-echo "------"
-echo "Running: ${longcmd[@]}"
-nohup "${longcmd[@]}" 2>"$ERRORLOG" >/dev/null &
-echo "------"
+#echo "------"
+#echo "Running: ${longcmd[@]}"
+#nohup "${longcmd[@]}" 2>"$ERRORLOG" >/dev/null &
+#echo "------"
 
 echo "you can follow decoder startup and error messages using tail -f $ERRORLOG"
 echo "you can follow what is being decoded using tail -f $LOGFILE"
