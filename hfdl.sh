@@ -85,6 +85,12 @@ gain+=("IFGR=40,RFGR=2")
 # build the command line for dumphfdl
 dumpcmd=( /usr/local/bin/dumphfdl )
 
+# output data into experimental adsbexchange aggregation (not shown on main page for the moment)
+dumpcmd+=( --station-id SF-KCJR-HFDL --output decoded:json:tcp:address=feed.airframes.io,port=5556 )
+
+# change the LOGFILE variable at the top to modify where the more permanent logfile is
+dumpcmd+=( --output "decoded:text:file:path=$LOGFILE")
+
 # edit the IP / port number of stats or add a # in front of the line to not use statsd
 #dumpcmd+=(--statsd 192.168.1.156:8125 )
 
@@ -102,14 +108,8 @@ dumpcmd+=( --soapysdr driver=sdrplay )
 # output data into VRS, add # in front of the line to deactivate
 #dumpcmd+=( --output decoded:basestation:tcp:mode=server,address=127.0.0.1,port=20005 )
 
-# output data into experimental adsbexchange aggregation (not shown on main page for the moment)
-#dumpcmd+=( --output decoded:json:tcp:address=feed.airframes.io,port=5556 )
-
 # use your local basestation database to look up aircraft details or add a # in front of the line to not use a basestation database
 #dumpcmd+=( --bs-db /home/seth/radio/dumphfdl/Basestation.sqb --ac-details verbose )
-
-# change the LOGFILE variable at the top to modify where the more permanent logfile is
-dumpcmd+=( --output "decoded:text:file:path=$LOGFILE")
 
 # adjust scoring weigths
 WEIGHT_POSITIONS=40
@@ -209,13 +209,12 @@ echo "Using ${fname[$k]}: gain-elements ${gain[$k]}, sample-rate ${samp[$k]}, fr
 
 #NOTE: if something is wrong with your script or if no messages were received it will always default to using the first frequency array
 
-# I dont need this section for my needs but leaving in the script in case I want to use it later
-#longcmd=( "${dumpcmd[@]}" --gain-elements ${gain[$k]} --sample-rate ${samp[$k]} ${freq[$k]} )
+longcmd=( "${dumpcmd[@]}" --gain-elements ${gain[$k]} --sample-rate ${samp[$k]} ${freq[$k]} )
 
-#echo "------"
-#echo "Running: ${longcmd[@]}"
-#nohup "${longcmd[@]}" 2>"$ERRORLOG" >/dev/null &
-#echo "------"
+echo "------"
+echo "Running: ${longcmd[@]}"
+nohup "${longcmd[@]}" 2>"$ERRORLOG" >/dev/null &
+echo "------"
 
 echo "you can follow decoder startup and error messages using tail -f $ERRORLOG"
 echo "you can follow what is being decoded using tail -f $LOGFILE"
