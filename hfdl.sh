@@ -125,8 +125,8 @@ pkill tail || true
 sleep 5
 
 # if the sdrplay api sometimes becomes unresponsive remove the # from the front of the next two lines. You will be prompted to enter your password unless you have modifed /etc/sudoers.
-#sudo systemctl restart sdrplay
-#sleep 5
+sudo systemctl restart sdrplay
+sleep 5
 
 
 
